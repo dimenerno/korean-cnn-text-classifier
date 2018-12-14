@@ -1,5 +1,9 @@
 # korean-cnn-text-classifier
 
+Structure
+=============
+![CNN Text Classification](http://d3kbpzbmcynnmx.cloudfront.net/wp-content/uploads/2015/11/Screen-Shot-2015-11-06-at-12.05.40-PM.png)
+
 data_helpers.py
 =============
 
