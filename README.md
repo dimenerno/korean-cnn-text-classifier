@@ -19,9 +19,9 @@ train.py
 
 ### preprocess()
 
-load_data_and_labels에서 데이터 불러옴.
-vocab_processor로 단어사전을 구축하고 각 문장의 단어 번호 매김
-*fit_transform으로 문장들을 벡터화함*
-np.array로 벡터화된 문장을 행렬로 표현->shuffle
+load_data_and_labels에서 데이터 불러옴.   
+vocab_processor로 단어사전을 구축하고 각 문장의 단어 번호 매김   
+*fit_transform으로 문장들을 벡터화함*   
+np.array로 벡터화된 문장을 행렬로 표현->shuffle   
 
 dev_sample_percentage * len(y) 기준으로 셔플된 배열을 train 과 dev로 
