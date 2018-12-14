@@ -1,6 +1,6 @@
 # korean-cnn-text-classifier
 
-함수 설명
+data_helpers.py
 =============
 
 ### load_data_and_labels(positive_data_file, negative_data_file)   
