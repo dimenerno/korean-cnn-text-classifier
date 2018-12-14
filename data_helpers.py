@@ -1,5 +1,7 @@
 import numpy as np
 import re
+from konlpy.tag import Kkma
+
 
 def clean_str(string):
     """
@@ -14,7 +16,7 @@ def clean_str(string):
     # string = re.sub(r"\'d", " \'d", string)
     # string = re.sub(r"\'ll", " \'ll", string)
     string = re.sub(r"[^ ㄱ-ㅣ가-힣ㅋㅎ\.\^0-9(),!?\'\"]", " ", string)
-    string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅣ]","", string)
+    string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅣ]", "", string)
     string = re.sub(r",", " , ", string)
     string = re.sub(r"!", " ! ", string)
     string = re.sub(r"\(", " \( ", string)
@@ -23,25 +25,41 @@ def clean_str(string):
     # string = re.sub(r"\s{2,}", " ", string)
     return string.strip()
 
+
+def tokenize(string):
+    """
+    형태소 분석
+    "나는 너가 좋아" -> "나 는 너 가 좋아"
+    """
+    kkma = Kkma()
+    tokenized_string = ""
+    for i in kkma.morphs(string):
+        tokenized_string += i + ' '
+    return tokenized_string
+
+
 def load_data_and_labels(positive_data_file, negative_data_file):
     """
     Loads MR polarity data from files, splits the data into words and generates labels.
     Returns split sentences and labels.
     """
     # Load data from files
-    positive_examples = list(open(positive_data_file, "r", encoding='utf-8').readlines())
+    positive_examples = list(
+        open(positive_data_file, "r", encoding='utf-8').readlines())
     positive_examples = [s.strip() for s in positive_examples]
-    negative_examples = list(open(negative_data_file, "r", encoding='utf-8').readlines())
+    negative_examples = list(
+        open(negative_data_file, "r", encoding='utf-8').readlines())
     negative_examples = [s.strip() for s in negative_examples]
     # Split by words
     x_text = positive_examples + negative_examples
-    x_text = [clean_str(sent) for sent in x_text]
-    print(x_text)
-    # Generate labels
-    #positive_labels = [[0, 1] for _ in positive_examples]
-    #negative_labels = [[1, 0] for _ in negative_examples]
-    #y = np.concatenate([positive_labels, negative_labels], 0)
-    #return [x_text, y]
+    x_text = [tokenize(clean_str(sent)) for sent in x_text]
+
+    positive_labels = [[0, 1] for _ in positive_examples]
+    negative_labels = [[1, 0] for _ in negative_examples]
+    y = np.concatenate([positive_labels, negative_labels], 0)
+
+    return [x_text, y]
+
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):
     """
@@ -63,4 +81,5 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
             yield shuffled_data[start_index:end_index]
 
 
-load_data_and_labels("./data/positive_kor.txt", "./data/negative_kor.txt")
+if __name__ == '__main__':
+    print(load_data_and_labels("./data/test_pos.txt", "./data/test_neg.txt"))
