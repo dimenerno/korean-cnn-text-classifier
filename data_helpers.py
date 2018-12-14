@@ -16,7 +16,7 @@ def clean_str(string):
     # string = re.sub(r"\'d", " \'d", string)
     # string = re.sub(r"\'ll", " \'ll", string)
     string = re.sub(r"[^ ㄱ-ㅣ가-힣ㅋㅎ\.\^0-9(),!?\'\"]", " ", string)
-    string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅣ]", "", string)
+    string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅛㅣ]", "", string)
     string = re.sub(r",", " , ", string)
     string = re.sub(r"!", " ! ", string)
     string = re.sub(r"\(", " \( ", string)
