@@ -16,19 +16,21 @@ def clean_str(string):
     # string = re.sub(r"\'d", " \'d", string)
     # string = re.sub(r"\'ll", " \'ll", string)
     string = re.sub(r"[^ ㄱ-ㅣ가-힣ㅋㅎ\.\^0-9(),!?\'\"♥]", " ", string)
-    string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅛㅣ]", "", string) #ㅋ ㅎ ㅜ ㅠ ㅡ 빼고 제거
+    string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅛㅣ]", "", string)  # ㅋ ㅎ ㅜ ㅠ ㅡ 빼고 제거
     string = re.sub(r"\.", " . ", string)
-    string = re.sub(r",", " , ", string) # 온점과 쉼표를 기준으로 나누기
-    string = re.sub(r"[\'\"]", "", string) #작은따옴표, 큰따옴표 제거
-    string = re.sub(r"!", " ! ", string) 
-    string = re.sub(r"\?", " \? ", string) #느낌표 물음표 띄어쓰기로 나누기
-    string = re.sub(r"\(", " \( ", string)
-    string = re.sub(r"\)", " \) ", string)
+    string = re.sub(r",", " , ", string)  # 온점과 쉼표를 기준으로 나누기
+    string = re.sub(r"[\'\"]", "", string)  # 작은따옴표, 큰따옴표 제거
+    string = re.sub(r"!", " ! ", string)
+    string = re.sub(r"\?", " ? ", string)  # 느낌표 물음표 띄어쓰기로 나누기
+    string = re.sub(r"\(", " ( ", string)
+    string = re.sub(r"\)", " ) ", string)
     string = re.sub(r"♥", " ♥ ", string)
     return string.strip()
 
+
 def split_func(iterator):
     return (x.split() for x in iterator)
+
 
 def tokenize(string):
     """
@@ -50,13 +52,23 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     # Load data from files
     positive_examples = list(
         open(positive_data_file, "r", encoding='utf-8').readlines())
-    positive_examples = [s.strip() for s in positive_examples]
     negative_examples = list(
         open(negative_data_file, "r", encoding='utf-8').readlines())
-    negative_examples = [s.strip() for s in negative_examples]
+
+    # positive_tagged = open("./tagged_data/positive.txt", 'w', encoding="utf-8")
+    # negative_tagged = open("./tagged_data/negative.txt", 'w', encoding="utf-8")
+
+    # for s in positive_examples:
+    #     positive_tagged.write(tokenize(clean_str(s.strip())) + "\n")
+    # for s in negative_examples:
+    #     negative_tagged.write(tokenize(clean_str(s.strip())) + "\n")
+
+    # positive_examples = [s.strip() for s in positive_examples]
+
+    # negative_examples = [s.strip() for s in negative_examples]
     # Split by words
     x_text = positive_examples + negative_examples
-    x_text = [tokenize(clean_str(sent)) for sent in x_text]
+    # x_text = [tokenize(clean_str(sent)) for sent in x_text]
 
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]
@@ -86,4 +98,5 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
 
 
 if __name__ == '__main__':
-    print(load_data_and_labels("./data/test_pos.txt", "./data/test_neg.txt"))
+    load_data_and_labels("./tagged_data/positive.txt",
+                         "./tagged_data/negative.txt")
