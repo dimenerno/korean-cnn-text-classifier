@@ -7,7 +7,7 @@ import os
 import time
 import datetime
 import data_helpers_double_kernel
-from text_cnn import TextCNN
+from text_cnn_double_kernel import TextCNN
 from tensorflow.contrib import learn
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
@@ -18,13 +18,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .1,
                       "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "../tagged_data/positive.txt",
+tf.flags.DEFINE_string("positive_data_file", "tagged_data/positive.txt",
                        "Data source for the positive data.")
-tf.flags.DEFINE_string("positive_data_file_morph", "../morph_tagged_data/positive.txt",
+tf.flags.DEFINE_string("positive_data_file_morph", "morph_tagged_data/positive.txt",
                        "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "../tagged_data/negative.txt",
+tf.flags.DEFINE_string("negative_data_file", "tagged_data/negative.txt",
                        "Data source for the negative data.")
-tf.flags.DEFINE_string("positive_data_file_morph", "../morph_tagged_data/positive.txt",
+tf.flags.DEFINE_string("negative_data_file_morph", "morph_tagged_data/negative.txt",
                        "Data source for the positive data.")
 
 # Model Hyperparams
@@ -74,14 +74,20 @@ def preprocess():
     vocab_processor = learn.preprocessing.VocabularyProcessor(
         max_document_length, tokenizer_fn=data_helpers_double_kernel.split_func)
     x = np.array(list(vocab_processor.fit_transform(x_text)))
-    print(x.shape())
+    x_morph = np.array(list(vocab_processor.fit_transform(x_text_morph)))
 
     # Randomly shuffle data
     np.random.seed(10)
     shuffle_indices = np.random.permutation(np.arange(len(y)))
     x_shuffled = x[shuffle_indices]
+    x_morph_shuffled = x_morph[shuffle_indices]
     y_shuffled = y[shuffle_indices]
 
+    # print(np.shape(x), np.shape(x_morph))
+    # x = np.dstack((x, x_morph))
+    # print(x)
+    # print(np.shape(x))
+    # TODO: 여기서부터 수정할 것
     # Split train/test set
     # TODO: This is very crude, should use cross-validation
     dev_sample_index = -1 * int(FLAGS.dev_sample_percentage * float(len(y)))
