@@ -18,9 +18,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .1,
                       "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "./tagged_data/positive.txt",
+tf.flags.DEFINE_string("positive_data_file", "./data/compare_pos.txt",
                        "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "./tagged_data/negative.txt",
+tf.flags.DEFINE_string("negative_data_file", "./data/compare_neg.txt",
                        "Data source for the negative data.")
 
 # Model Hyperparams
