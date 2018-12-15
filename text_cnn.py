@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import tensorflow as tf
 import numpy as np
@@ -7,6 +7,7 @@ import numpy as np
 tf.flags.DEFINE_string("gpu", "/gpu:6", "Using device gpu")
 
 FLAGS = tf.flags.FLAGS
+
 
 class TextCNN(object):
     """
@@ -89,13 +90,13 @@ class TextCNN(object):
             self.predictions = tf.argmax(self.scores, 1, name="predictions")
 
         # Calculate mean cross-entropy loss
-        with tf.name_scope("loss"):
+        with tf.device(FLAGS.gpu), tf.name_scope("loss"):
             losses = tf.nn.softmax_cross_entropy_with_logits(
                 logits=self.scores, labels=self.input_y)
             self.loss = tf.reduce_mean(losses) + l2_reg_lambda * l2_loss
 
         # Accuracy
-        with tf.name_scope("accuracy"):
+        with tf.device(FLAGS.gpu), tf.name_scope("accuracy"):
             correct_predictions = tf.equal(
                 self.predictions, tf.argmax(self.input_y, 1))
             self.accuracy = tf.reduce_mean(
