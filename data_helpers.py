@@ -17,7 +17,7 @@ def clean_str(string):
     # string = re.sub(r"\'ll", " \'ll", string)
     string = re.sub(r"[^ ㄱ-ㅣ가-힣ㅋㅎ\.\^0-9(),!?\'\"♥]", " ", string)
     string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅛㅣ]", "", string) #ㅋ ㅎ ㅜ ㅠ ㅡ 빼고 제거
-    string = re.sub(r".", " . ", string)
+    string = re.sub(r"\.", " . ", string)
     string = re.sub(r",", " , ", string) # 온점과 쉼표를 기준으로 나누기
     string = re.sub(r"[\'\"]", "", string) #작은따옴표, 큰따옴표 제거
     string = re.sub(r"!", " ! ", string) 
