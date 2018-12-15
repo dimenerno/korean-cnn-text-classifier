@@ -59,10 +59,10 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     negative_examples = [s.strip() for s in negative_examples]
     # Split by words
     x_text = positive_examples + negative_examples
-    #print(x_text)
+    #print(x_text[0:10])
     
     x_text = [tokenize(clean_str(sent)) for sent in x_text]
-    #print(x_text)
+    #print(x_text[0:10])
     
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]
