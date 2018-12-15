@@ -29,3 +29,7 @@ vocab_processor로 단어사전을 구축하고 각 문장의 단어 번호 매�
 np.array로 벡터화된 문장을 행렬로 표현->shuffle   
 
 dev_sample_percentage * len(y) 기준으로 셔플된 배열을 train 과 dev로 분리
+
+알고 있으면 쓸모있는 것들
+===============
+- Linux에서 한글 에러날 때: 콘솔에 `export PYTHONIOENCODING=utf8` 입력
