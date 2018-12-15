@@ -21,10 +21,11 @@ tf.flags.DEFINE_string("negative_data_file", "./data/negative.txt", "Data source
 
 # Model Hyperparams
 tf.flags.DEFINE_integer("embedding_dim",128,"Dimensionality of character embedding (default: 128)")
-tf.flags.DEFINE_string("filter_sizes","3,4,5","Comma-separated filter sizes (default: '3,4,5'")
+tf.flags.DEFINE_string("filter_sizes","3,4,5","Comma-separated filter sizes (default: '3,4,5')")
 tf.flags.DEFINE_integer("num_filters", 128, "Number of filters per filter size (default: 128)")
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "Dropout keep probability (default: 0.5)")
 tf.flags.DEFINE_float("l2_reg_lambda", 0.0, "L2 regularization lambda (default: 0.0)")
+tf.flags.DEFINE_string("gpu","/gpu:6","using gpu device")
 
 # Training parameters
 tf.flags.DEFINE_integer("batch_size", 64, "Batch Size (default: 64)")
@@ -183,17 +184,18 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
 
             # Training loop. For each batch...
-            for batch in batches:
-                x_batch, y_batch = zip(*batch)
-                train_step(x_batch, y_batch)
-                current_step = tf.train.global_step(sess, global_step)
-                if current_step % FLAGS.evaluate_every == 0:
-                    print("\nEvaluation:")
-                    dev_step(x_dev, y_dev, writer=dev_summary_writer)
-                    print("")
-                if current_step % FLAGS.checkpoint_every == 0:
-                    path = saver.save(sess, checkpoint_prefix, global_step=current_step)
-                    print("Saved model checkpoint to {}\n".format(path))
+            with tf.device(FLAGS.gpu):
+                for batch in batches:
+                    x_batch, y_batch = zip(*batch)
+                    train_step(x_batch, y_batch)
+                    current_step = tf.train.global_step(sess, global_step)
+                    if current_step % FLAGS.evaluate_every == 0:
+                        print("\nEvaluation:")
+                        dev_step(x_dev, y_dev, writer=dev_summary_writer)
+                        print("")
+                    if current_step % FLAGS.checkpoint_every == 0:
+                        path = saver.save(sess, checkpoint_prefix, global_step=current_step)
+                        print("Saved model checkpoint to {}\n".format(path))
 
 
 def main(argv=None):
