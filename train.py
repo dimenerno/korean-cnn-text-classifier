@@ -16,8 +16,8 @@ from tensorflow.contrib import learn
 
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .1, "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "./data/positive.txt", "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "./data/negative.txt", "Data source for the negative data.")
+tf.flags.DEFINE_string("positive_data_file", "./tagged_data/positive.txt", "Data source for the positive data.")
+tf.flags.DEFINE_string("negative_data_file", "./tagged_data/negative.txt", "Data source for the negative data.")
 
 # Model Hyperparams
 tf.flags.DEFINE_integer("embedding_dim",128,"Dimensionality of character embedding (default: 128)")
