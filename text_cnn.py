@@ -27,7 +27,7 @@ class TextCNN(object):
         l2_loss = tf.constant(0.0)
 
         # Embedding layer
-        with tf.device('/device:GPU:6'), tf.name_scope("embedding"):
+        with tf.device('/gpu:6'), tf.name_scope("embedding"):
             self.W = tf.Variable(
                 tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0),
                 name="W")
@@ -38,7 +38,7 @@ class TextCNN(object):
         # Create a convolution + maxpool layer for each filter size
         pooled_outputs = []
         for _, filter_size in enumerate(filter_sizes):
-            with tf.name_scope("conv-maxpool-%s" % filter_size):
+            with tf.device('/gpu:6'), tf.name_scope("conv-maxpool-%s" % filter_size):
                 # Convolution Layer
                 filter_shape = [filter_size, embedding_size, 1, num_filters]
                 W = tf.Variable(tf.truncated_normal(
@@ -69,12 +69,12 @@ class TextCNN(object):
         self.h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
 
         # Add dropout
-        with tf.name_scope("dropout"):
+        with tf.device('/gpu:6'), tf.name_scope("dropout"):
             self.h_drop = tf.nn.dropout(
                 self.h_pool_flat, self.dropout_keep_prob)
 
         # Final (unnormalized) scores and predictions
-        with tf.name_scope("output"):
+        with tf.device('/gpu:6'), tf.name_scope("output"):
             W = tf.get_variable(
                 "W",
                 shape=[num_filters_total, num_classes],
