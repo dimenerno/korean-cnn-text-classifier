@@ -15,7 +15,7 @@ def clean_str(string):
     # string = re.sub(r"\'re", " \'re", string)
     # string = re.sub(r"\'d", " \'d", string)
     # string = re.sub(r"\'ll", " \'ll", string)
-    string = re.sub(r"[^ ㄱ-ㅣ가-힣ㅋㅎ\.\^0-9(),!?\'\"]", " ", string)
+    string = re.sub(r"[^ ㄱ-ㅣ가-힣ㅋㅎ\.\^0-9(),!?\'\"♥]", " ", string)
     string = re.sub(r"[ㄱ-ㅊㅌ-ㅍㅏ-ㅛㅣ]", "", string) #ㅋ ㅎ ㅜ ㅠ ㅡ 빼고 제거
     string = re.sub(r".", " . ", string)
     string = re.sub(r",", " , ", string) # 온점과 쉼표를 기준으로 나누기
@@ -24,6 +24,7 @@ def clean_str(string):
     string = re.sub(r"\?", " \? ", string) #느낌표 물음표 띄어쓰기로 나누기
     string = re.sub(r"\(", " \( ", string)
     string = re.sub(r"\)", " \) ", string)
+    string = re.sub(r"♥", " ♥ ", string)
     return string.strip()
 
 def split_func(iterator):
