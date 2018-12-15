@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+import data_helpers
 
 from tensorflow.contrib import learn
 
@@ -16,6 +17,7 @@ tf.flags.DEFINE_string("negative_data_file", "./data/negative.txt", "Data source
 FLAGS = tf.flags.FLAGS
 
 
+
 def preprocess():
     # Data Preparation
     # ==================================================
@@ -25,8 +27,8 @@ def preprocess():
     x_text, y = data_helpers.load_data_and_labels(FLAGS.positive_data_file, FLAGS.negative_data_file)
 
     # Build vocabulary
-    max_document_length = max([len(x.split(" ")) for x in x_text])
-    vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length)
+    max_document_length = max([len(x.split()) for x in x_text])
+    vocab_processor = learn.preprocessing.VocabularyProcessor(max_document_length, tokenizer_fn = data_helpers.split_func)
     x = np.array(list(vocab_processor.fit_transform(x_text)))
 
     # Randomly shuffle data
