@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 import numpy as np
 import re
 from konlpy.tag import Kkma
