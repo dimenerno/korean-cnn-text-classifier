@@ -10,7 +10,7 @@ import data_helpers
 from text_cnn import TextCNN
 from tensorflow.contrib import learn
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 
 # Parameters
 # =====================================
@@ -94,7 +94,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
     # Training
     # ===========================================
 
-    with tf.device(FLAGS.gpu), tf.Graph().as_default():
+    with tf.device("/gpu:0"), tf.Graph().as_default():
         session_conf = tf.ConfigProto(
             allow_soft_placement=FLAGS.allow_soft_placement,
             log_device_placement=FLAGS.log_device_placement)
@@ -211,7 +211,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                 list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
 
             # Training loop. For each batch...
-            with tf.device('/gpu:6'):
+            with tf.device('/gpu:0'):
                 for batch in batches:
                     x_batch, y_batch = zip(*batch)
                     train_step(x_batch, y_batch)
