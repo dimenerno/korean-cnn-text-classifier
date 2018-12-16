@@ -251,7 +251,7 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
                     if current_step>5000:
                       break
             for a in res:
-              print(a[0]+'\t'+a[1])
+              print(str(a[0])+'\t'+str(a[1]))
 
 # %%
 
