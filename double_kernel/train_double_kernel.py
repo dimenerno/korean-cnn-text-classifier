@@ -19,13 +19,13 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .1,
                       "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "tagged_data/positive.txt",
+tf.flags.DEFINE_string("positive_data_file", "../tagged_data/positive.txt",
                        "Data source for the positive data.")
-tf.flags.DEFINE_string("positive_data_file_morph", "morph_tagged_data/positive.txt",
+tf.flags.DEFINE_string("positive_data_file_morph", "../morph_tagged_data/positive.txt",
                        "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "tagged_data/negative.txt",
+tf.flags.DEFINE_string("negative_data_file", "../tagged_data/negative.txt",
                        "Data source for the negative data.")
-tf.flags.DEFINE_string("negative_data_file_morph", "morph_tagged_data/negative.txt",
+tf.flags.DEFINE_string("negative_data_file_morph", "../morph_tagged_data/negative.txt",
                        "Data source for the positive data.")
 
 # Model Hyperparams
@@ -236,7 +236,8 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
                     current_step = tf.train.global_step(sess, global_step)
                     if current_step % FLAGS.evaluate_every == 0:
                         print("\nEvaluation:")
-                        dev_step(x_dev, y_dev, writer=dev_summary_writer)
+                        dev_step(x_dev, x_morph_dev, y_dev,
+                                 writer=dev_summary_writer)
                         print("")
                     if current_step % FLAGS.checkpoint_every == 0:
                         path = saver.save(
