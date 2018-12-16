@@ -93,7 +93,7 @@ def preprocess():
 def train(x_train, y_train, vocab_processor, x_dev, y_dev):
     # Training
     # ===========================================
-    acc=[]
+    result=[]
     with tf.device("/gpu:0"), tf.Graph().as_default():
         session_conf = tf.ConfigProto(
             allow_soft_placement=FLAGS.allow_soft_placement,
@@ -202,7 +202,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     feed_dict)
                 time_str = datetime.datetime.now().isoformat()
                 print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
-                acc.append(accuracy)
+                acc.append([loss,accuracy])
                 if writer:
                     writer.add_summary(summaries, step)
 
@@ -219,15 +219,15 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     if current_step % FLAGS.evaluate_every == 0:
                         print("\nEvaluation:")
                         dev_step(x_dev, y_dev, writer=dev_summary_writer)
-                        print(acc)
+                        print(result)
                         print("")
                     if current_step % FLAGS.checkpoint_every == 0:
                         path = saver.save(
                             sess, checkpoint_prefix, global_step=current_step)
                         print("Saved model checkpoint to {}\n".format(path))
-                    if current_step>4000:
+                    if current_step>5000:
                       break
-            for a in acc:
+            for a in result:
               print(a)
 
 def main(argv=None):
