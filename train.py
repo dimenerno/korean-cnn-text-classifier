@@ -18,9 +18,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 # Data loading params
 tf.flags.DEFINE_float("dev_sample_percentage", .1,
                       "Percentage of the training data to use for validation")
-tf.flags.DEFINE_string("positive_data_file", "./data/compare_pos.txt",
+tf.flags.DEFINE_string("positive_data_file", "./data/positive.txt",
                        "Data source for the positive data.")
-tf.flags.DEFINE_string("negative_data_file", "./data/compare_neg.txt",
+tf.flags.DEFINE_string("negative_data_file", "./data/negative.txt",
                        "Data source for the negative data.")
 
 # Model Hyperparams
@@ -93,7 +93,7 @@ def preprocess():
 def train(x_train, y_train, vocab_processor, x_dev, y_dev):
     # Training
     # ===========================================
-
+    acc=[]
     with tf.device("/gpu:0"), tf.Graph().as_default():
         session_conf = tf.ConfigProto(
             allow_soft_placement=FLAGS.allow_soft_placement,
@@ -201,8 +201,8 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     [global_step, dev_summary_op, cnn.loss, cnn.accuracy],
                     feed_dict)
                 time_str = datetime.datetime.now().isoformat()
-                print("{}: step {}, loss {:g}, acc {:g}".format(
-                    time_str, step, loss, accuracy))
+                print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
+                acc.append(accuracy)
                 if writer:
                     writer.add_summary(summaries, step)
 
@@ -224,7 +224,10 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                         path = saver.save(
                             sess, checkpoint_prefix, global_step=current_step)
                         print("Saved model checkpoint to {}\n".format(path))
-
+                    if current_step>4000:
+                      break
+            for a in acc:
+              print(a)
 
 def main(argv=None):
     x_train, y_train, vocab_processor, x_dev, y_dev = preprocess()
