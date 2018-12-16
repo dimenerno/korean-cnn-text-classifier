@@ -96,7 +96,7 @@ def preprocess():
     dev_sample_index = -1 * int(FLAGS.dev_sample_percentage * float(len(y)))
     x_train, x_dev = x_shuffled[:dev_sample_index], x_shuffled[dev_sample_index:]
     x_morph_train, x_morph_dev = x_morph_shuffled[:
-                                                  dev_sample_index], x_shuffled[dev_sample_index:]
+                                                  dev_sample_index], x_morph_shuffled[dev_sample_index:]
     y_train, y_dev = y_shuffled[:dev_sample_index], y_shuffled[dev_sample_index:]
 
     del x, y, x_shuffled, y_shuffled, x_morph_shuffled
