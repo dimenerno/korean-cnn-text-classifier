@@ -11,7 +11,7 @@ import data_helpers_double_kernel
 from text_cnn_double_kernel import TextCNN
 from tensorflow.contrib import learn
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "6"
 
 # Parameters
 # =====================================
