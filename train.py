@@ -219,6 +219,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     if current_step % FLAGS.evaluate_every == 0:
                         print("\nEvaluation:")
                         dev_step(x_dev, y_dev, writer=dev_summary_writer)
+                        print(acc)
                         print("")
                     if current_step % FLAGS.checkpoint_every == 0:
                         path = saver.save(
