@@ -228,7 +228,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     if current_step>5000:
                       break
             for a in result:
-              print(a[0]+'\t'+a[1])
+              print(str(a[0])+'\t'+str(a[1]))
 
 def main(argv=None):
     x_train, y_train, vocab_processor, x_dev, y_dev = preprocess()
