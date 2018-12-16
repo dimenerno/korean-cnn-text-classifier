@@ -206,7 +206,7 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
                     time_str, step, loss, accuracy))
                 train_summary_writer.add_summary(summaries, step)
 
-            def dev_step(x_batch, y_batch, writer=None):
+            def dev_step(x_batch, x_morph_batch, y_batch, writer=None):
                 """
                 Evaluates model on a dev set
                 """
@@ -233,6 +233,7 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
             with tf.device('/gpu:0'):
                 for batch in batches:
                     x_batch, x_morph_batch, y_batch = zip(*batch)
+                    train_step(x_batch, x_morph_batch, y_batch)
                     current_step = tf.train.global_step(sess, global_step)
                     if current_step % FLAGS.evaluate_every == 0:
                         print("\nEvaluation:")
