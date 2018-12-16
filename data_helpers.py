@@ -63,7 +63,8 @@ def load_data_and_labels(positive_data_file, negative_data_file):
 #     positive_examples = list(open(positive_data_file, "r", encoding='utf-8').readlines())
 #     negative_examples = list(open(negative_data_file, "r", encoding='utf-8').readlines())
 #     x_text = positive_examples + negative_examples
-
+#     print (x_text[0:10])
+    
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]
     y = np.concatenate([positive_labels, negative_labels], 0)
