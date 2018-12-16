@@ -212,6 +212,7 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
                 """
                 feed_dict = {
                     cnn.input_x: x_batch,
+                    cnn.input_x_morph: x_morph_batch,
                     cnn.input_y: y_batch,
                     cnn.dropout_keep_prob: 1.0
                 }
@@ -232,13 +233,6 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
             with tf.device('/gpu:0'):
                 for batch in batches:
                     x_batch, x_morph_batch, y_batch = zip(*batch)
-                    print("=======================")
-                    print(np.shape(x_batch), np.shape(
-                        x_morph_batch), np.shape(y_batch))
-                    print("=======================")
-                    train_step(x_batch, x_morph_batch, y_batch)
-                    while(1):
-                        pass
                     current_step = tf.train.global_step(sess, global_step)
                     if current_step % FLAGS.evaluate_every == 0:
                         print("\nEvaluation:")
