@@ -241,12 +241,17 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
                         print("\nEvaluation:")
                         dev_step(x_dev, x_morph_dev, y_dev,
                                  writer=dev_summary_writer)
-                        print("")
                         print(res)
+                        print("")
+                        
                     if current_step % FLAGS.checkpoint_every == 0:
                         path = saver.save(
                             sess, checkpoint_prefix, global_step=current_step)
                         print("Saved model checkpoint to {}\n".format(path))
+                    if current_step>5000:
+                      break
+            for a in res:
+              print(a[0]+'\t'+a[1])
 
 # %%
 
