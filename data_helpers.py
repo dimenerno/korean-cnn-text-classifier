@@ -45,22 +45,22 @@ def load_data_and_labels(positive_data_file, negative_data_file):
     Loads MR polarity data from files, splits the data into words and generates labels.
     Returns split sentences and labels.
     """
-#     # Untokenized
-#     # Load data from files
-#     positive_examples = list(
-#         open(positive_data_file, "r", encoding='utf-8').readlines())
-#     positive_examples = [s.strip() for s in positive_examples]
-#     negative_examples = list(
-#         open(negative_data_file, "r", encoding='utf-8').readlines())
-#     negative_examples = [s.strip() for s in negative_examples]
+    # Untokenized
+    # Load data from files
+    positive_examples = list(
+        open(positive_data_file, "r", encoding='utf-8').readlines())
+    positive_examples = [s.strip() for s in positive_examples]
+    negative_examples = list(
+        open(negative_data_file, "r", encoding='utf-8').readlines())
+    negative_examples = [s.strip() for s in negative_examples]
 
-#     # Split by words
-#     x_text = positive_examples + negative_examples
-#     x_text = [clean_str(sent) for sent in x_text]
-
-    positive_examples = list(open(positive_data_file, "r", encoding='utf-8').readlines())
-    negative_examples = list(open(negative_data_file, "r", encoding='utf-8').readlines())
+    # Split by words
     x_text = positive_examples + negative_examples
+    x_text = [clean_str(sent) for sent in x_text]
+
+#     positive_examples = list(open(positive_data_file, "r", encoding='utf-8').readlines())
+#     negative_examples = list(open(negative_data_file, "r", encoding='utf-8').readlines())
+#     x_text = positive_examples + negative_examples
 
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]
