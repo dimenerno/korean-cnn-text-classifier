@@ -202,7 +202,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     feed_dict)
                 time_str = datetime.datetime.now().isoformat()
                 print("{}: step {}, loss {:g}, acc {:g}".format(time_str, step, loss, accuracy))
-                acc.append([loss,accuracy])
+                result.append([loss,accuracy])
                 if writer:
                     writer.add_summary(summaries, step)
 
@@ -228,7 +228,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                     if current_step>5000:
                       break
             for a in result:
-              print(a)
+              print(a[0]+'\t'+a[1])
 
 def main(argv=None):
     x_train, y_train, vocab_processor, x_dev, y_dev = preprocess()
