@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# %%
 import tensorflow as tf
 import numpy as np
 import os
@@ -59,6 +60,8 @@ tf.flags.DEFINE_boolean("log_device_placement", True,
 
 FLAGS = tf.flags.FLAGS
 
+# %%
+
 
 def preprocess():
     # Data Preparation
@@ -87,21 +90,24 @@ def preprocess():
     # x = np.dstack((x, x_morph))
     # print(x)
     # print(np.shape(x))
-    # TODO: 여기서부터 수정할 것
+
     # Split train/test set
-    # TODO: This is very crude, should use cross-validation
     dev_sample_index = -1 * int(FLAGS.dev_sample_percentage * float(len(y)))
     x_train, x_dev = x_shuffled[:dev_sample_index], x_shuffled[dev_sample_index:]
+    x_morph_train, x_morph_dev = x_morph_shuffled[:
+                                                  dev_sample_index], x_shuffled[dev_sample_index:]
     y_train, y_dev = y_shuffled[:dev_sample_index], y_shuffled[dev_sample_index:]
 
-    del x, y, x_shuffled, y_shuffled
+    del x, y, x_shuffled, y_shuffled, x_morph_shuffled
 
     print("Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_)))
     print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
-    return x_train, y_train, vocab_processor, x_dev, y_dev
+    return x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, y_dev
+
+# %%
 
 
-def train(x_train, y_train, vocab_processor, x_dev, y_dev):
+def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, y_dev):
     # Training
     # ===========================================
 
@@ -182,12 +188,13 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
             # Initialize all variables
             sess.run(tf.global_variables_initializer())
 
-            def train_step(x_batch, y_batch):
+            def train_step(x_batch, x_morph_batch, y_batch):
                 """
                 A single training step
                 """
                 feed_dict = {
                     cnn.input_x: x_batch,
+                    cnn.input_x_morph: x_morph_batch,
                     cnn.input_y: y_batch,
                     cnn.dropout_keep_prob: FLAGS.dropout_keep_prob
                 }
@@ -219,13 +226,19 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
 
             # Generate batches
             batches = data_helpers_double_kernel.batch_iter(
-                list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
+                list(zip(x_train, x_morph_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
 
             # Training loop. For each batch...
             with tf.device('/gpu:0'):
                 for batch in batches:
-                    x_batch, y_batch = zip(*batch)
-                    train_step(x_batch, y_batch)
+                    x_batch, x_morph_batch, y_batch = zip(*batch)
+                    print("=======================")
+                    print(np.shape(x_batch), np.shape(
+                        x_morph_batch), np.shape(y_batch))
+                    print("=======================")
+                    train_step(x_batch, x_morph_batch, y_batch)
+                    while(1):
+                        pass
                     current_step = tf.train.global_step(sess, global_step)
                     if current_step % FLAGS.evaluate_every == 0:
                         print("\nEvaluation:")
@@ -236,10 +249,13 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
                             sess, checkpoint_prefix, global_step=current_step)
                         print("Saved model checkpoint to {}\n".format(path))
 
+# %%
+
 
 def main(argv=None):
-    x_train, y_train, vocab_processor, x_dev, y_dev = preprocess()
-    train(x_train, y_train, vocab_processor, x_dev, y_dev)
+    x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, y_dev = preprocess()
+    train(x_train, x_morph_train, y_train,
+          vocab_processor, x_dev, x_morph_dev, y_dev)
 
 
 if __name__ == '__main__':

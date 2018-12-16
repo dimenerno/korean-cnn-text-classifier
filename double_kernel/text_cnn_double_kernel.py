@@ -25,6 +25,8 @@ class TextCNN(object):
         # Placeholders for input, output and dropout
         self.input_x = tf.placeholder(
             tf.int32, [None, sequence_length], name="input_x")
+        self.input_x_morph = tf.placeholder(
+            tf.int32, [None, sequence_length], name="input_x_morph")
         self.input_y = tf.placeholder(
             tf.float32, [None, num_classes], name="input_y")
         self.dropout_keep_prob = tf.placeholder(
@@ -39,15 +41,22 @@ class TextCNN(object):
                 tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0),
                 name="W")
             self.embedded_chars = tf.nn.embedding_lookup(self.W, self.input_x)
-            self.embedded_chars_expanded = tf.expand_dims(
-                self.embedded_chars, -1)
+
+            self.W_morph = tf.Variable(
+                tf.random_uniform([vocab_size, embedding_size], -1.0, 1.0),
+                name="W")
+            self.embedded_chars_morph = tf.nn.embedding_lookup(
+                self.W, self.input_x_morph)
+
+            self.embedded_chars_expanded = tf.stack(
+                [self.embedded_chars, self.embedded_chars_morph], 3)
 
         # Create a convolution + maxpool layer for each filter size
         pooled_outputs = []
         for _, filter_size in enumerate(filter_sizes):
             with tf.device("/gpu:0"), tf.name_scope("conv-maxpool-%s" % filter_size):
                 # Convolution Layer
-                filter_shape = [filter_size, embedding_size, 1, num_filters]
+                filter_shape = [filter_size, embedding_size, 2, num_filters]
                 W = tf.Variable(tf.truncated_normal(
                     filter_shape, stddev=0.1), name="W")
                 b = tf.Variable(tf.constant(
