@@ -59,6 +59,7 @@ tf.flags.DEFINE_boolean("log_device_placement", True,
 
 
 FLAGS = tf.flags.FLAGS
+res = []
 
 # %%
 
@@ -222,6 +223,7 @@ def train(x_train, x_morph_train, y_train, vocab_processor, x_dev, x_morph_dev, 
                 time_str = datetime.datetime.now().isoformat()
                 print("{}: step {}, loss {:g}, acc {:g}".format(
                     time_str, step, loss, accuracy))
+                res.append([loss, accuracy])
                 if writer:
                     writer.add_summary(summaries, step)
 
